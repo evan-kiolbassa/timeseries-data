@@ -1,10 +1,12 @@
 import pandas as pd
 from numpy import float64
 import datetime as dt
+import os
 
-# Import the new influxdb API client
-import influxdb_client
-from influxdb_client.client.write_api import SYNCHRONOUS
+os.chdir('./python/Classes')
+from influxdb import *
+
+
 
 df = pd.read_csv("data/PRSA_Data_Aotizhongxin_20130301-20170228.csv", )
 
@@ -40,12 +42,10 @@ Fields = ['PM2.5','PM10','SO2','NO2','CO','O3','TEMP','PRES','DEWP','RAIN','wd',
 # Define tag fields
 datatags = ['station','wd']
 
+client = influxDB('lTUKuRE46dJw8Yj_AmYtQHELsnfNM1eGVdJkYUj_Q_Ddq7yqCScDlbt9PYdu-RR_OW-NX9S_GaxNqXz7iAECCw==', 
+'my-org', 
+'8086')
 
-client = influxdb_client.InfluxDBClient(
-   url='http://localhost:8086',
-   token='lTUKuRE46dJw8Yj_AmYtQHELsnfNM1eGVdJkYUj_Q_Ddq7yqCScDlbt9PYdu-RR_OW-NX9S_GaxNqXz7iAECCw==',
-   org='my-org'
-)
 
 #Write the data with two tags
 write_api = client.write_api(write_options=SYNCHRONOUS)
@@ -60,15 +60,3 @@ message = write_api.write(bucket='air-quality',org='my-org',record = ex_df, data
 print(message)
 
 write_api.flush()
-
-
-
-
-
-
-
-# old API
-#client = DataFrameClient('localhost', 8086, 'my-admin', 'my-password', 'my-bucket')
-# Write data to "SchoolData" measurement of "schooldb" database.
-#client.write_points(ex_df,"db0",tag_columns=datatags,protocol='line')
-

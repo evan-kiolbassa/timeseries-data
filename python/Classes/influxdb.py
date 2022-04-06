@@ -1,4 +1,6 @@
-from influxdb_client import InfluxDBClient
+# Import the new influxdb API client
+import influxdb_client
+from influxdb_client.client.write_api import SYNCHRONOUS
 
 class influxDB:
     def __init__(self, token, org, port):
@@ -16,8 +18,8 @@ class influxDB:
         print('Connection Established')
         return client
 
-    def _writeAPI(self, client):
-        write_api = client.write_api()
+    def _writeAPI(self, client, write_options):
+        write_api = client.write_api(write_options)
         return write_api
 
     def _readAPI(self, client):
