@@ -27,7 +27,7 @@ class influxDB:
     def execute_batchQuery(self, query, accessor):
         client = self._clientConnect()
         queryResult = self._readAPI(client).query(org = self.org, query = query)
-        if accessor is 'dataframe':
+        if accessor == 'dataframe':
             return self._accessor_method(accessor, queryResult)
         elif type(accessor) == list:
             results = {}
