@@ -22,6 +22,21 @@ class influxDB:
         write_api = client.write_api(write_options)
         return write_api
 
+    def writeConfig(self, bucket = None, 
+    write_options = None,
+    record = None, 
+    data_frame_measurement_name = None, 
+    data_frame_tag_columns = None):
+        client = self._clientConnect()
+        write_api = self._writeAPI(client, write_options)
+        statement = write_api.write(bucket=bucket,
+        org=self.org,
+        record = record, 
+        data_frame_measurement_name = data_frame_measurement_name, 
+        data_frame_tag_columns=data_frame_tag_columns)
+        print(statement)
+        write_api.flush()
+
     def _readAPI(self, client):
         read_api = client.query_api()
         return read_api
