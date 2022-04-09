@@ -46,17 +46,14 @@ client = influxDB('lTUKuRE46dJw8Yj_AmYtQHELsnfNM1eGVdJkYUj_Q_Ddq7yqCScDlbt9PYdu-
 'my-org', 
 '8086')
 
+client.writeConfig(write_options=SYNCHRONOUS, 
+bucket='air-quality',
+record = ex_df, 
+data_frame_measurement_name = 'full-tags', 
+data_frame_tag_columns=['station','wd'])
 
-#Write the data with two tags
-write_api = client.write_api(write_options=SYNCHRONOUS)
-message = write_api.write(bucket='air-quality',org='my-org',record = ex_df, data_frame_measurement_name = 'full-tags', data_frame_tag_columns=['station','wd'])
-print(message)
-
-write_api.flush()
-
-#Write the data only with one tag
-write_api = client.write_api(write_options=SYNCHRONOUS)
-message = write_api.write(bucket='air-quality',org='my-org',record = ex_df, data_frame_measurement_name = 'location-tag-only', data_frame_tag_columns=['station'])
-print(message)
-
-write_api.flush()
+client.writeConfig(write_options=SYNCHRONOUS, 
+bucket='air-quality',
+record = ex_df, 
+data_frame_measurement_name = 'location-tag-only', 
+data_frame_tag_columns=['station'])

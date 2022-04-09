@@ -27,6 +27,8 @@ class influxDB:
     record = None, 
     data_frame_measurement_name = None, 
     data_frame_tag_columns = None):
+
+    
         client = self._clientConnect()
         write_api = self._writeAPI(client, write_options)
         statement = write_api.write(bucket=bucket,

@@ -1,14 +1,13 @@
 import pandas as pd
-import influxdb_client
-from influxdb_client.client.write_api import SYNCHRONOUS
+import os
+os.chdir('./python/Classes')
+from influxdb import *
 import influxdb_client.client.influxdb_client
 
 
-client = influxdb_client.InfluxDBClient(
-   url='http://localhost:8086',
-   token='lTUKuRE46dJw8Yj_AmYtQHELsnfNM1eGVdJkYUj_Q_Ddq7yqCScDlbt9PYdu-RR_OW-NX9S_GaxNqXz7iAECCw==',
-   org='my-org'
-)
+client = influxDB('lTUKuRE46dJw8Yj_AmYtQHELsnfNM1eGVdJkYUj_Q_Ddq7yqCScDlbt9PYdu-RR_OW-NX9S_GaxNqXz7iAECCw==', 
+'my-org', 
+'8086')
 
 queryAPI = client.query_api()
 
@@ -17,7 +16,7 @@ myquery_location = 'from(bucket: "air-quality") |> range(start: 2013-03-25T00:00
             '|> filter(fn: (r) => r["_measurement"] == "location-tag-only")' \
             '|> filter(fn: (r) => r["_field"] == "TEMP")' 
 
-location_df = queryAPI.query_data_frame( query= myquery_location)
+location_df = client.execute_batchQuery(myquery_location, 'dataframe')
 
 print(location_df.info())
 print(location_df)
@@ -28,12 +27,6 @@ myquery_everything = 'from(bucket: "air-quality") |> range(start: 2013-03-25T00:
             '|> filter(fn: (r) => r["_field"] == "TEMP")' 
 
 
-everything_df = queryAPI.query_data_frame( query= myquery_everything)
+everything_df = client.execute_batchQuery(myquery_everything, 'dataframe')
 
 print(everything_df)
-
-
-# '|> filter(fn: (r) => r["_measurement"] == "with-tags")' \
-#    '|> filter(fn: (r) => r["_field"] == "CO")' \
-#    '|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)' \
-#    '|> yield(name: "mean")'
